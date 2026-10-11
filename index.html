@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для моей любимой ❤️</title>
+    <style>
+        :root {
+            --bg-color: #ffeef2;
+            --main-pink: #ff6b8b;
+            --dark-pink: #ff4771;
+            --text-color: #4a4a4a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Экран 1: Конверт */
+        .envelope-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 1s ease;
+        }
+
+        .envelope {
+            width: 280px;
+            height: 180px;
+            background-color: #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            cursor: pointer;
+            border-radius: 0 0 10px 10px;
+            transition: transform 0.3s;
+        }
+
+        .envelope:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Клапан конверта */
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            border-top: 100px solid var(--main-pink);
+            transform-origin: top;
+            transition: transform 0.5s ease 0.3s;
+            z-index: 3;
+        }
+
+        /* Внутренности конверта */
+        .envelope::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-left: 140px solid #fff3f5;
+            border-right: 140px solid #fff3f5;
+            border-bottom: 90px solid #fff3f5;
+            z-index: 1;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .heart-seal {
+            position: absolute;
+            top: 85px;
+            left: 125px;
+            width: 30px;
+            height: 30px;
+            background-color: var(--dark-pink);
+            transform: rotate(-45deg);
+            z-index: 4;
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+
+        .heart-seal::before, .heart-seal::after {
+            content: '';
+            width: 30px;
+            height: 30px;
+            background-color: var(--dark-pink);
+            border-radius: 50%;
+            position: absolute;
+        }
+        .heart-seal::before { top: -15px; left: 0; }
+        .heart-seal::after { left: 15px; top: 0; }
+
+        .envelope-text {
+            margin-top: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--main-pink);
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Анимация открытия */
+        .envelope.open::before {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+        .envelope.open .heart-seal {
+            opacity: 0;
+            transform: scale(0) rotate(-45deg);
+        }
+
+        /* Экран 2: Главный контент (скрыт по дефолту) */
+        .main-content {
+            display: none;
+            opacity: 0;
+            text-align: center;
+            max-width: 500px;
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(255, 107, 139, 0.2);
+            transition: opacity 1s ease;
+            transform: scale(0.9);
+        }
+
+        .main-content.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        h1 {
+            color: var(--dark-pink);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .reason-box {
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .btn {
+            background-color: var(--main-pink);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 107, 139, 0.4);
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--dark-pink);
+            transform: translateY(-2px);
+        }
+
+        /* Эффект падающих сердечек */
+        .heart-particle {
+            position: absolute;
+            color: var(--main-pink);
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ЭКРАН 1: Конверт -->
+    <div class="envelope-container" id="envelopeContainer">
+        <div class="envelope" id="envelope" onclick="openEnvelope()">
+            <div class="heart-seal"></div>
+        </div>
+        <div class="envelope-text">Тебе письмо. Нажми, чтобы открыть...</div>
+    </div>
+
+    <!-- ЭКРАН 2: Причины любви -->
+    <div class="main-content" id="mainContent">
+        <h1>100 причин моей любви к тебе ❤️</h1>
+        <div class="reason-box" id="reasonText">Нажми на кнопку ниже, чтобы узнать первую причину...</div>
+        <button class="btn" onclick="nextReason()">Узнать причину</button>
+    </div>
+
+    <script>
+        // Массив с твоими причинами (измени текст на свой!)
+        const reasons = [
+            "Ты улыбаешься так, что весь мой мир становится ярче. ✨",
+            "С тобой твой боня может быть настоящим собой и не бояться осуждения. 🐼",
+            "Твой смех — мой самый любимый звук во Вселенной. 🎵",
+            "Ты заботишься о боне, даже когда сильно устала. ☕",
+            "У тебя самые теплые и уютные объятия в мире. 🤗",
+            "Ты вдохновляешь боню становиться лучше каждый день. 🚀",
+            "Мне безумно нравится, как ты засыпаешь у меня на плече и держишь мою письку. 😴",
+            "Твой боня очень любит тебя и очень скучает каждый день минуту секунду. ❤️❤️😔❤️❤️",
+            "Ты умеешь поднять боне настроение одной лишь глупой шуткой. 📱"
+        ];
+
+        let currentReasonIndex = -1;
+
+        function openEnvelope() {
+            const envelope = document.getElementById('envelope');
+            const container = document.getElementById('envelopeContainer');
+            const content = document.getElementById('mainContent');
+
+            envelope.classList.add('open');
+            
+            // Запускаем фонтан из сердечек при открытии
+            for(let i=0; i<30; i++) {
+                setTimeout(createHeart, i * 50);
+            }
+
+            // Плавно переключаем экраны
+            setTimeout(() => {
+                container.style.display = 'none';
+                content.classList.add('show');
+                // Запускаем редкий фоновый дождь из сердечек
+                setInterval(createHeart, 800);
+            }, 1200);
+        }
+
+        function nextReason() {
+            const reasonText = document.getElementById('reasonText');
+            
+            // Выбираем случайную причину, отличную от предыдущей
+            let nextIndex;
+            do {
+                nextIndex = Math.floor(Math.random() * reasons.length);
+            } while (nextIndex === currentReasonIndex && reasons.length > 1);
+
+            currentReasonIndex = nextIndex;
+
+            // Эффект красивой смены текста
+            reasonText.style.opacity = 0;
+            setTimeout(() => {
+                reasonText.textContent = reasons[currentReasonIndex];
+                reasonText.style.opacity = 1;
+                reasonText.style.transition = 'opacity 0.5s';
+                // Подкидываем пару сердечек при клике
+                createHeart();
+                createHeart();
+            }, 300);
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-particle');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '-20px';
+            
+            // Случайный размер и скорость
+            const size = Math.random() * 15 + 10;
+            heart.style.fontSize = size + 'px';
+            
+            const duration = Math.random() * 3 + 2;
+            heart.style.animationDuration = duration + 's';
+            
+            document.body.appendChild(heart);
+
+            // Удаляем сердечко после падения
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+    </script>
+</body>
+</html>
